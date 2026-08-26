@@ -153,7 +153,7 @@ llm-eval-cicd/
 
 ```bash
 # Clone the repository
-git clone https://github.com/munikumarnetlapalli/llm-eval-cicd.git
+git clone https://github.com/munikumarnetlapalli/LLM-Eval-CI-CD.git
 cd llm-eval-cicd
 
 # Install editable package with development dependencies
