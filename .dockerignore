@@ -1,0 +1,56 @@
+# Git
+.git/
+.gitignore
+.github/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Dev environment
+.venv/
+venv/
+env/
+.env
+.env.local
+
+# Test artifacts
+htmlcov/
+.coverage
+*.cover
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Docs / markdown (not needed in image)
+docs/
+*.md
+!README.md
+
+# Node
+node_modules/
+
+# Large eval result files (Azure Blob in prod)
+eval-results/
+*.eval.json
+
+# Azure IaC (not needed in runtime image)
+azure/
+infrastructure/
+
+# Scripts (not in production image)
+scripts/
+
+# OS
+.DS_Store
+Thumbs.db

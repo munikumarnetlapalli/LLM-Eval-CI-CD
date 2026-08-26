@@ -1,0 +1,14 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": { "value": "eastus" },
+    "environmentName": { "value": "prod" },
+    "imageTag": { "value": "latest" },
+    "acrName": { "value": "YOUR_ACR_NAME" },
+    "imageName": { "value": "llm-eval-cicd" },
+    "postgresAdminPassword": { "value": "INJECT_AT_DEPLOY_TIME" },
+    "openaiApiKey": { "value": "INJECT_AT_DEPLOY_TIME" },
+    "appInsightsConnectionString": { "value": "INJECT_AT_DEPLOY_TIME" }
+  }
+}

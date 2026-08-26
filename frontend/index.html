@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LLM Eval CI/CD — Dashboard</title>
+  <meta name="description" content="Automated LLM + RAG Evaluation, Regression Detection, and CI/CD Quality Gates Dashboard" />
+  <link rel="stylesheet" href="/static/css/dashboard.css" />
+</head>
+<body>
+
+<!-- ── Sidebar ── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h1>LLM Eval</h1>
+    <p>CI/CD Quality Gates</p>
+  </div>
+  <div class="sidebar-nav">
+    <a class="nav-item active" id="nav-overview"    onclick="showPage('overview')"><span class="icon">◈</span> Overview</a>
+    <a class="nav-item"        id="nav-runs"        onclick="showPage('runs')"><span class="icon">▶</span> Evaluation Runs</a>
+    <a class="nav-item"        id="nav-run-detail"  onclick="showPage('run-detail')"><span class="icon">≡</span> Run Details</a>
+    <a class="nav-item"        id="nav-model-comp"  onclick="showPage('model-comp')"><span class="icon">⊞</span> Model Comparison</a>
+    <a class="nav-item"        id="nav-rag-comp"    onclick="showPage('rag-comp')"><span class="icon">⊟</span> RAG Comparison</a>
+    <a class="nav-item"        id="nav-regression"  onclick="showPage('regression')"><span class="icon">⚡</span> Regression</a>
+    <a class="nav-item"        id="nav-datasets"    onclick="showPage('datasets')"><span class="icon">⊛</span> Datasets</a>
+    <a class="nav-item"        id="nav-cost"        onclick="showPage('cost')"><span class="icon">$</span> Cost / Quality</a>
+    <a class="nav-item"        id="nav-gates"       onclick="showPage('gates')"><span class="icon">⊘</span> Quality Gates</a>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- ── Top bar ── -->
+  <div class="topbar">
+    <h2 id="page-title">Overview</h2>
+    <button class="btn btn-primary" onclick="refreshData()">↺ Refresh</button>
+    <button class="btn btn-ghost" onclick="triggerRun()">▶ Run Eval</button>
+  </div>
+
+  <div class="content">
+
+    <!-- ═══════════════════════════════════════════════════
+         PAGE 1 — OVERVIEW
+    ═══════════════════════════════════════════════════ -->
+    <div class="page active" id="page-overview">
+      <div class="stat-grid" id="overview-stats">
+        <div class="stat-tile">
+          <div class="label">Total Runs</div>
+          <div class="value" id="stat-total-runs">—</div>
+          <div class="sub">all time</div>
+        </div>
+        <div class="stat-tile">
+          <div class="label">Avg Quality</div>
+          <div class="value" id="stat-avg-quality">—</div>
+          <div class="sub">faithfulness × relevance</div>
+        </div>
+        <div class="stat-tile">
+          <div class="label">Regressions</div>
+          <div class="value delta-down" id="stat-regressions">—</div>
+          <div class="sub">last 30 days</div>
+        </div>
+        <div class="stat-tile">
+          <div class="label">Avg P95 Latency</div>
+          <div class="value" id="stat-avg-latency">—</div>
+          <div class="sub">milliseconds</div>
+        </div>
+        <div class="stat-tile">
+          <div class="label">Avg Cost/Query</div>
+          <div class="value" id="stat-avg-cost">—</div>
+          <div class="sub">USD</div>
+        </div>
+        <div class="stat-tile">
+          <div class="label">Failed Gates</div>
+          <div class="value delta-down" id="stat-failed-gates">—</div>
+          <div class="sub">deployments blocked</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Recent Evaluation Runs</div>
+        <table class="data-table" id="overview-runs-table">
+          <thead>
+            <tr>
+              <th>Run ID</th>
+              <th>Model</th>
+              <th>RAG</th>
+              <th>Dataset</th>
+              <th>Quality</th>
+              <th>P95 (ms)</th>
+              <th>Cost</th>
+              <th>Gate</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody id="overview-runs-body">
+            <tr><td colspan="9" style="text-align:center;color:var(--text-muted)">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         PAGE 2 — EVALUATION RUNS
+    ═══════════════════════════════════════════════════ -->
+    <div class="page" id="page-runs">
+      <div class="card">
+        <div class="card-title">All Evaluation Runs</div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Run ID</th><th>Experiment</th><th>Model</th><th>RAG v</th>
+              <th>Dataset</th><th>Cases</th><th>Pass Rate</th>
+              <th>Faithfulness</th><th>Hallucination</th><th>Gate</th><th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="runs-table-body">
+            <tr><td colspan="11" style="text-align:center;color:var(--text-muted)">Loading...</td></tr>
+          </tbody>
+        </table>
+        <div style="display:flex;gap:8px;margin-top:16px;align-items:center">
+          <button class="btn btn-ghost" id="prev-page" onclick="changePage(-1)">← Prev</button>
+          <span id="page-indicator" style="color:var(--text-muted);font-size:12px">Page 1</span>
+          <button class="btn btn-ghost" id="next-page" onclick="changePage(1)">Next →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         PAGE 3 — RUN DETAILS
+    ═══════════════════════════════════════════════════ -->
+    <div class="page" id="page-run-detail">
+      <div style="display:flex;gap:12px;margin-bottom:16px;align-items:center">
+        <input id="run-id-input" type="text" placeholder="Enter Run ID (e.g. run-abc123)"
+               style="flex:1;padding:8px 12px;background:var(--bg-card);border:1px solid var(--border);
+                      border-radius:6px;color:var(--text);font-family:var(--mono);font-size:13px;"
+               onkeydown="if(event.key==='Enter') loadRunDetail()" />
+        <button class="btn btn-primary" onclick="loadRunDetail()">Load Run</button>
+      </div>
+
+      <div id="run-detail-content" style="display:none">
+        <div id="gate-banner-container"></div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+          <div class="card">
+            <div class="card-title">Run Metadata</div>
+            <table class="data-table" id="run-meta-table"></table>
+          </div>
+          <div class="card">
+            <div class="card-title">Metrics</div>
+            <div id="run-metrics-container"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         PAGE 4 — MODEL COMPARISON
+    ═══════════════════════════════════════════════════ -->
+    <div class="page" id="page-model-comp">
+      <div class="card">
+        <div class="card-title">Model Comparison</div>
+        <p style="color:var(--text-muted);font-size:12px;margin-bottom:16px">
+          Enter comma-separated run IDs to compare models head-to-head.
+        </p>
+        <div style="display:flex;gap:12px;margin-bottom:16px">
+          <input id="compare-run-ids" type="text" placeholder="run-abc123, run-def456, run-ghi789"
+                 style="flex:1;padding:8px 12px;background:var(--bg);border:1px solid var(--border);
+                        border-radius:6px;color:var(--text);font-size:13px;" />
+          <button class="btn btn-primary" onclick="loadComparison()">Compare</button>
+        </div>
+        <div id="comparison-result"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         PAGE 5 — RAG COMPARISON
+    ═══════════════════════════════════════════════════ -->
+    <div class="page" id="page-rag-comp">
+      <div class="card">
+        <div class="card-title">Model × RAG Configuration Grid</div>
+        <p style="color:var(--text-muted);font-size:12px;margin-bottom:16px">
+          Each cell shows quality score for a model/RAG combination. Highest cell highlighted in green.
+        </p>
+        <div id="rag-grid-container">
+          <p style="color:var(--text-muted)">Load runs on the Model Comparison page first, then navigate here.</p>
+          <div id="rag-grid-table"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         PAGE 6 — REGRESSION ANALYSIS
+    ═══════════════════════════════════════════════════ -->
+    <div class="page" id="page-regression">
+      <div class="card">
+        <div class="card-title">Regression Analysis</div>
+        <div style="display:flex;gap:12px;margin-bottom:16px">
+          <input id="baseline-id-input" type="text" placeholder="Baseline ID"
+                 style="flex:1;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;" />
+          <input id="candidate-id-input" type="text" placeholder="Candidate Run ID"
+                 style="flex:1;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;" />
+          <button class="btn btn-primary" onclick="analyzeRegression()">Analyze</button>
+        </div>
+        <div id="regression-result"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         PAGE 7 — DATASET VERSIONS
+    ═══════════════════════════════════════════════════ -->
+    <div class="page" id="page-datasets">
+      <div class="card">
+        <div class="card-title">Dataset Versions</div>
+        <div id="dataset-info">
+          <div class="stat-grid">
+            <div class="stat-tile"><div class="label">Current Version</div><div class="value" style="font-size:20px">v1</div></div>
+            <div class="stat-tile"><div class="label">Total Cases</div><div class="value" style="font-size:20px">30</div></div>
+            <div class="stat-tile"><div class="label">Dataset Type</div><div class="value" style="font-size:16px">RAG</div></div>
+          </div>
+          <table class="data-table" style="margin-top:16px">
+            <thead><tr><th>Category</th><th>Count</th><th>Coverage</th></tr></thead>
+            <tbody>
+              <tr><td>policy</td><td>7</td><td><div class="progress-bar"><div class="progress-fill fill-blue" style="width:70%"></div></div></td></tr>
+              <tr><td>straightforward</td><td>4</td><td><div class="progress-bar"><div class="progress-fill fill-blue" style="width:40%"></div></div></td></tr>
+              <tr><td>multi_hop</td><td>4</td><td><div class="progress-bar"><div class="progress-fill fill-blue" style="width:40%"></div></div></td></tr>
+              <tr><td>numerical</td><td>4</td><td><div class="progress-bar"><div class="progress-fill fill-blue" style="width:40%"></div></div></td></tr>
+              <tr><td>citation_required</td><td>3</td><td><div class="progress-bar"><div class="progress-fill fill-blue" style="width:30%"></div></div></td></tr>
+              <tr><td>unanswerable</td><td>2</td><td><div class="progress-bar"><div class="progress-fill fill-yellow" style="width:20%"></div></div></td></tr>
+              <tr><td>difficult</td><td>2</td><td><div class="progress-bar"><div class="progress-fill fill-blue" style="width:20%"></div></div></td></tr>
+              <tr><td>edge_case</td><td>1</td><td><div class="progress-bar"><div class="progress-fill fill-yellow" style="width:10%"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         PAGE 8 — COST / QUALITY
+    ═══════════════════════════════════════════════════ -->
+    <div class="page" id="page-cost">
+      <div class="card">
+        <div class="card-title">Cost / Quality Frontier</div>
+        <p style="color:var(--text-muted);font-size:12px;margin-bottom:16px">
+          Lower-left = cheap and low quality. Upper-left = high quality at low cost (ideal).
+          Never automatically declare highest-quality model "best" — cost and latency matter.
+        </p>
+        <canvas id="cost-quality-chart" width="700" height="320"
+                style="background:var(--bg);border-radius:6px;border:1px solid var(--border);padding:12px;display:block;margin:0 auto"></canvas>
+        <div id="cost-quality-table" style="margin-top:20px"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         PAGE 9 — QUALITY GATES
+    ═══════════════════════════════════════════════════ -->
+    <div class="page" id="page-gates">
+      <div class="card">
+        <div class="card-title">Quality Gate Configuration</div>
+        <pre id="gate-config-display" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;
+             padding:16px;font-family:var(--mono);font-size:12px;color:var(--text);overflow:auto">
+quality_gate:
+  faithfulness:
+    minimum: 0.90
+  answer_relevance:
+    minimum: 0.80
+  hallucination_rate:
+    maximum: 0.05
+  context_relevance:
+    minimum: 0.80
+  p95_latency_ms:
+    maximum_ms: 1000
+  cost_per_query:
+    maximum_usd: 0.02</pre>
+      </div>
+      <div class="card">
+        <div class="card-title">Evaluate Gate for a Run</div>
+        <div style="display:flex;gap:12px;margin-bottom:16px">
+          <input id="gate-run-id" type="text" placeholder="Run ID"
+                 style="flex:1;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;" />
+          <button class="btn btn-primary" onclick="evaluateGate()">Evaluate Gate</button>
+        </div>
+        <div id="gate-result"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Gate Decision History</div>
+        <table class="data-table">
+          <thead><tr><th>Run ID</th><th>Verdict</th><th>Failing Rules</th><th>Time</th></tr></thead>
+          <tbody id="gate-history-body">
+            <tr><td colspan="4" style="text-align:center;color:var(--text-muted)">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- end .content -->
+</div><!-- end .main -->
+
+<script src="/static/js/dashboard.js"></script>
+</body>
+</html>

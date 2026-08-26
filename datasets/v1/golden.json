@@ -1,0 +1,282 @@
+{
+  "version": "v1",
+  "dataset_type": "rag",
+  "description": "Golden evaluation dataset v1 — hand-curated RAG evaluation cases covering policy, multi-hop, citation, numerical, unanswerable, and edge-case question types.",
+  "created_at": "2026-08-23T00:00:00Z",
+  "created_by": "human-review",
+  "git_commit": null,
+  "case_count": 30,
+  "categories": ["straightforward", "difficult", "multi_hop", "unanswerable", "ambiguous", "citation_required", "numerical", "edge_case", "policy"],
+  "cases": [
+    {
+      "id": "rag_001",
+      "question": "What is the company's data retention policy for customer records?",
+      "expected_answer": "Customer records are retained for 7 years after the end of the customer relationship, in compliance with financial regulations.",
+      "required_sources": ["data-retention-policy.pdf"],
+      "category": "policy",
+      "difficulty": "easy",
+      "tags": ["retention", "compliance"]
+    },
+    {
+      "id": "rag_002",
+      "question": "How many vacation days does a new employee receive in their first year?",
+      "expected_answer": "New employees receive 15 vacation days in their first year, increasing to 20 days after 3 years of service.",
+      "required_sources": ["employee-handbook.pdf"],
+      "category": "straightforward",
+      "difficulty": "easy",
+      "tags": ["hr", "benefits"]
+    },
+    {
+      "id": "rag_003",
+      "question": "What is the approval process for capital expenditures over $50,000?",
+      "expected_answer": "Capital expenditures over $50,000 require approval from the department head, CFO, and CEO, with a mandatory 10-business-day review period.",
+      "required_sources": ["finance-policy.pdf", "approval-matrix.pdf"],
+      "category": "policy",
+      "difficulty": "medium",
+      "tags": ["finance", "approvals"]
+    },
+    {
+      "id": "rag_004",
+      "question": "How does the escalation path work when a customer complaint is unresolved after 48 hours?",
+      "expected_answer": "After 48 hours, unresolved complaints are escalated to the Customer Success Manager, then to the VP of Customer Experience if still unresolved after 72 hours total.",
+      "required_sources": ["customer-support-sop.pdf"],
+      "category": "multi_hop",
+      "difficulty": "medium",
+      "tags": ["support", "escalation"]
+    },
+    {
+      "id": "rag_005",
+      "question": "What is the maximum file size allowed for email attachments on the corporate email system?",
+      "expected_answer": "The corporate email system allows a maximum attachment size of 25 MB per email. Files larger than this must be shared via the approved cloud storage platform.",
+      "required_sources": ["it-acceptable-use-policy.pdf"],
+      "category": "straightforward",
+      "difficulty": "easy",
+      "tags": ["it", "email"]
+    },
+    {
+      "id": "rag_006",
+      "question": "Who approved the Q3 2025 marketing budget and what was the total approved amount?",
+      "expected_answer": "The Q3 2025 marketing budget of $2.4 million was approved by the Chief Marketing Officer and ratified by the Board of Directors on June 15, 2025.",
+      "required_sources": ["board-meeting-minutes-q2-2025.pdf", "marketing-budget-q3-2025.pdf"],
+      "category": "citation_required",
+      "difficulty": "hard",
+      "tags": ["finance", "budget", "board"]
+    },
+    {
+      "id": "rag_007",
+      "question": "What is the deadline for submitting expense reports after a business trip?",
+      "expected_answer": "The exact deadline for submitting expense reports after a business trip is not specified in the available documents.",
+      "required_sources": [],
+      "category": "unanswerable",
+      "difficulty": "medium",
+      "tags": ["hr", "expenses"]
+    },
+    {
+      "id": "rag_008",
+      "question": "How many total security incidents were reported in 2024 and what percentage were classified as critical?",
+      "expected_answer": "In 2024, 47 security incidents were reported, of which 6 (12.8%) were classified as critical severity.",
+      "required_sources": ["security-annual-report-2024.pdf"],
+      "category": "numerical",
+      "difficulty": "hard",
+      "tags": ["security", "metrics"]
+    },
+    {
+      "id": "rag_009",
+      "question": "What happens to unvested stock options if an employee is terminated for cause?",
+      "expected_answer": "All unvested stock options are immediately forfeited upon termination for cause, with no grace period or accelerated vesting.",
+      "required_sources": ["equity-compensation-plan.pdf"],
+      "category": "policy",
+      "difficulty": "medium",
+      "tags": ["equity", "termination"]
+    },
+    {
+      "id": "rag_010",
+      "question": "What is the refund policy for enterprise software subscriptions cancelled mid-term?",
+      "expected_answer": "Enterprise subscriptions cancelled mid-term are eligible for a prorated refund for the unused portion, minus a 10% early termination fee.",
+      "required_sources": ["enterprise-subscription-agreement.pdf"],
+      "category": "policy",
+      "difficulty": "medium",
+      "tags": ["billing", "refunds"]
+    },
+    {
+      "id": "rag_011",
+      "question": "Which departments are required to complete GDPR training and by what deadline?",
+      "expected_answer": "All departments handling EU customer data — including Sales, Customer Support, Engineering, and Marketing — are required to complete GDPR training by March 31 each year.",
+      "required_sources": ["gdpr-compliance-policy.pdf", "training-schedule-2026.pdf"],
+      "category": "multi_hop",
+      "difficulty": "hard",
+      "tags": ["compliance", "gdpr", "training"]
+    },
+    {
+      "id": "rag_012",
+      "question": "Can an employee use personal devices to access internal CRM data while working remotely?",
+      "expected_answer": "Personal devices may access internal CRM data only if they are enrolled in the company's Mobile Device Management (MDM) system and meet the minimum security requirements defined in the BYOD policy.",
+      "required_sources": ["byod-policy.pdf", "remote-work-policy.pdf"],
+      "category": "policy",
+      "difficulty": "medium",
+      "tags": ["it", "security", "remote-work"]
+    },
+    {
+      "id": "rag_013",
+      "question": "What was the net promoter score (NPS) for the Enterprise tier customers in Q2 2025?",
+      "expected_answer": "The Enterprise tier NPS for Q2 2025 was 67, up from 61 in Q1 2025.",
+      "required_sources": ["customer-success-report-q2-2025.pdf"],
+      "category": "numerical",
+      "difficulty": "medium",
+      "tags": ["metrics", "customer-success"]
+    },
+    {
+      "id": "rag_014",
+      "question": "What are the criteria for classifying a customer as a strategic account?",
+      "expected_answer": "A customer is classified as a strategic account if they meet at least two of the following: annual contract value above $500K, operating in a key industry vertical, or having expansion potential exceeding 200% of current ARR.",
+      "required_sources": ["sales-strategy-2026.pdf"],
+      "category": "citation_required",
+      "difficulty": "hard",
+      "tags": ["sales", "accounts"]
+    },
+    {
+      "id": "rag_015",
+      "question": "How should a manager handle a conflict of interest disclosure from a direct report?",
+      "expected_answer": "The manager must immediately forward the disclosure to the HR department and the Legal & Compliance team within 2 business days, without taking any personal action on the matter.",
+      "required_sources": ["code-of-conduct.pdf", "conflict-of-interest-policy.pdf"],
+      "category": "multi_hop",
+      "difficulty": "hard",
+      "tags": ["hr", "compliance", "ethics"]
+    },
+    {
+      "id": "rag_016",
+      "question": "What is the password rotation policy for production database credentials?",
+      "expected_answer": "Production database credentials must be rotated every 90 days and may not be reused for at least 12 password cycles. Rotation must be performed using the approved secrets management platform.",
+      "required_sources": ["security-policy.pdf"],
+      "category": "policy",
+      "difficulty": "medium",
+      "tags": ["security", "database"]
+    },
+    {
+      "id": "rag_017",
+      "question": "What is the name of the CEO who signed the 2025 employee handbook?",
+      "expected_answer": "The 2025 employee handbook was signed by Jane Mitchell, Chief Executive Officer.",
+      "required_sources": ["employee-handbook-2025.pdf"],
+      "category": "straightforward",
+      "difficulty": "easy",
+      "tags": ["hr"]
+    },
+    {
+      "id": "rag_018",
+      "question": "What percentage of revenue must be allocated to R&D according to the 2026 board resolution?",
+      "expected_answer": "The 2026 board resolution requires a minimum of 18% of annual revenue to be allocated to Research and Development activities.",
+      "required_sources": ["board-resolutions-2026.pdf"],
+      "category": "numerical",
+      "difficulty": "medium",
+      "tags": ["finance", "board"]
+    },
+    {
+      "id": "rag_019",
+      "question": "Is it permissible for a team lead to approve their own purchase orders?",
+      "expected_answer": "No. Team leads are explicitly prohibited from approving their own purchase orders. All POs require approval from at least one level above the requestor.",
+      "required_sources": ["procurement-policy.pdf"],
+      "category": "policy",
+      "difficulty": "easy",
+      "tags": ["finance", "procurement"]
+    },
+    {
+      "id": "rag_020",
+      "question": "What is the SLA for Priority 1 incidents in the production environment?",
+      "expected_answer": "Priority 1 incidents in the production environment have a 15-minute response SLA and a 4-hour resolution SLA, with mandatory executive notification within 30 minutes of detection.",
+      "required_sources": ["incident-management-policy.pdf"],
+      "category": "policy",
+      "difficulty": "medium",
+      "tags": ["operations", "sla"]
+    },
+    {
+      "id": "rag_021",
+      "question": "Can a part-time contractor participate in the employee stock purchase plan?",
+      "expected_answer": "The available documents do not specify contractor eligibility for the stock purchase plan. This question cannot be answered from the current knowledge base.",
+      "required_sources": [],
+      "category": "unanswerable",
+      "difficulty": "hard",
+      "tags": ["equity", "contractors"]
+    },
+    {
+      "id": "rag_022",
+      "question": "What is the process for requesting an exception to the travel booking policy?",
+      "expected_answer": "Travel policy exceptions must be submitted via the HR portal at least 5 business days before travel, require manager approval, and are reviewed by the Finance team within 3 business days.",
+      "required_sources": ["travel-policy.pdf"],
+      "category": "multi_hop",
+      "difficulty": "medium",
+      "tags": ["hr", "travel"]
+    },
+    {
+      "id": "rag_023",
+      "question": "What was the average deal cycle length for SMB customers in FY2025?",
+      "expected_answer": "The average deal cycle length for SMB customers in FY2025 was 34 days, down from 41 days in FY2024.",
+      "required_sources": ["sales-performance-report-fy2025.pdf"],
+      "category": "numerical",
+      "difficulty": "medium",
+      "tags": ["sales", "metrics"]
+    },
+    {
+      "id": "rag_024",
+      "question": "Under what conditions can an employee's access to production systems be revoked immediately without prior notice?",
+      "expected_answer": "Production access may be revoked immediately without notice in cases of: suspected security breach, termination for cause, ongoing investigation for policy violations, or detection of unauthorized data access patterns.",
+      "required_sources": ["access-control-policy.pdf"],
+      "category": "edge_case",
+      "difficulty": "hard",
+      "tags": ["security", "access"]
+    },
+    {
+      "id": "rag_025",
+      "question": "How does the commission structure change if a sales rep exceeds 150% of their quarterly quota?",
+      "expected_answer": "Sales reps exceeding 150% of quarterly quota receive an accelerated commission rate of 1.75x their base rate on all revenue above the 150% threshold.",
+      "required_sources": ["sales-compensation-plan-2026.pdf"],
+      "category": "difficult",
+      "difficulty": "hard",
+      "tags": ["sales", "compensation"]
+    },
+    {
+      "id": "rag_026",
+      "question": "Who is responsible for maintaining the business continuity plan and how often must it be tested?",
+      "expected_answer": "The Chief Operating Officer owns the business continuity plan. It must be tested annually via a full simulation exercise and reviewed quarterly for updates.",
+      "required_sources": ["business-continuity-plan.pdf"],
+      "category": "citation_required",
+      "difficulty": "medium",
+      "tags": ["operations", "continuity"]
+    },
+    {
+      "id": "rag_027",
+      "question": "What is the definition of 'material non-public information' as used in the insider trading policy?",
+      "expected_answer": "Material non-public information refers to any information about the company that is not publicly available and that a reasonable investor would consider important in making an investment decision, including but not limited to earnings, M&A activity, and major contracts.",
+      "required_sources": ["insider-trading-policy.pdf"],
+      "category": "difficult",
+      "difficulty": "hard",
+      "tags": ["legal", "compliance"]
+    },
+    {
+      "id": "rag_028",
+      "question": "How many days of paid parental leave are provided for the primary caregiver?",
+      "expected_answer": "The primary caregiver receives 16 weeks (112 days) of fully paid parental leave.",
+      "required_sources": ["benefits-guide-2026.pdf"],
+      "category": "straightforward",
+      "difficulty": "easy",
+      "tags": ["hr", "benefits"]
+    },
+    {
+      "id": "rag_029",
+      "question": "What is the threshold for mandatory legal review of vendor contracts?",
+      "expected_answer": "All vendor contracts with a total value exceeding $100,000 or a term exceeding 24 months require mandatory review by the Legal department before execution.",
+      "required_sources": ["vendor-management-policy.pdf"],
+      "category": "policy",
+      "difficulty": "medium",
+      "tags": ["legal", "procurement"]
+    },
+    {
+      "id": "rag_030",
+      "question": "What recourse does an employee have if they disagree with their performance review rating?",
+      "expected_answer": "Employees who disagree with their performance review rating may submit a formal appeal to HR within 10 business days of receiving the review. The appeal is reviewed by a panel consisting of HR, a skip-level manager, and an independent department representative.",
+      "required_sources": ["performance-review-policy.pdf"],
+      "category": "policy",
+      "difficulty": "medium",
+      "tags": ["hr", "performance"]
+    }
+  ]
+}
