@@ -397,6 +397,3 @@ pytest evaluator/tests/ --cov=evaluator --cov-report=term-missing
 
 Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more information.
 
-<div align="center">
-  <sub>Built for production AI engineering teams. Created by <a href="https://github.com/munikumarnetlapalli">NETLAPALLI MUNI KUMAR</a>.</sub>
-</div>
